@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="ul-menu">
+                <li class="menu main-page">
+                    <a href="index.php">
+                        Моя страница
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="index.php">
+                        Главная
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="table.php">
+                        Определения
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="calculations.html">
+                        Расчеты
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="form.php">
+                        Оставить заявку
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="authorization.php">
+                        Вход
+                    </a>
+                </li>
+    
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h1 class="main_h1">Расчеты</h1>
+        </section>
+        <section class="calc">
+            <h2>Возведение в степень</h2>
+            <div>
+                <input type="text" id="powOne">
+                <input type="text" id="powTwo">
+                <button type="button" onclick="powFunction(document.getElementById('powOne').value, document.getElementById('powTwo').value)">Выполнить</button>
+            </div>
+            <div class="result_calc">
+                <p id="firstResult"></p>
+            </div>
+            <h2>Нахождение НОД</h2>
+            <div>
+                <input type="text" id="gcdOne">
+                <input type="text" id="gcdTwo">
+                <button type="button" onclick="gcdFunction(document.getElementById('gcdOne').value, document.getElementById('gcdTwo').value)">Выполнить</button>
+            </div>
+            <div class="result_calc">
+                <p id="secondResult"></p>
+            </div>
+            <h2>Наименьшая цифра</h2>
+            <div>
+                <input type="text" id="minDigitNumber">
+                <button type="button" onclick="minDigit(document.getElementById('minDigitNumber').value)">Выполнить</button>
+            </div>
+            <div class="result_calc">
+                <p id="thirdResult"></p>
+            </div>
+            <h2>Плюрализация</h2>
+            <div>
+                <input type="text" id="plurNumber">
+                <button type="button" onclick="pluralization(document.getElementById('plurNumber').value)">Выполнить</button>
+            </div>
+            <div class="result_calc">
+                <p id="forthResult"></p>
+            </div>
+            <h2>Фибоначчи</h2>
+            <div>
+                <input type="text" id="fibbNumber">
+                <button type="button" onclick="fibb(document.getElementById('fibbNumber').value)">Выполнить</button>
+            </div>
+            <div class="result_calc">
+                <p id="fifthResult"></p>
+            </div>
+        
+        </section>
+    </main>
+    <script type="text/javascript">
+        function powFunction(x, n) { 
+            var result = x;
+            
+            if (n >= 0) {
+                if (n == 0) {
+                    result = 1;
+                }
+                else {
+                    for (var i = 1; i < n; i++) {
+                        result *= x;
+                    }
+                }
+            }
+            else
+                result = "Степень должна быть натуральным числом."
+            
+            document.getElementById("firstResult").innerHTML = result; 
+        } 
+
+        function gcdFunction(a, b) { 
+            if (a >= 0 && b >= 0) {
+                while (b != 0) {
+                    var temp = a % b;
+                    a = b;
+                    b = temp;
+                }
+                document.getElementById("secondResult").innerHTML = a; 
+            }
+            else 
+                document.getElementById("secondResult").innerHTML = "Числа должны быть неотрицательными.";
+            
+        } 
+        
+        function minDigit(m) { 
+            if (m >= 0) {
+                var array = m.split('');
+                var temp = 10;
+                array.forEach(element => {
+                    if (element < temp) {
+                        temp = element;
+                    }
+                });
+                document.getElementById("thirdResult").innerHTML = temp; 
+            }
+            else
+                document.getElementById("thirdResult").innerHTML = "Число должно быть неотрицательным."; 
+            
+        } 
+
+        function pluralization(p) { 
+            var string = "";
+            
+            if (p >= 0) {
+                var array = p.split('');
+        
+                if (p > 10 && p < 20 || array[array.length - 1] > 4 && array[array.length - 1] <= 9 || array[array.length - 1] == 0)
+                    string = "В результате выполнения запроса было найдено " + p + " записей";
+                else {
+                    if (array[array.length - 1] > 1 && array[array.length - 1] <= 4)
+                        string = "В результате выполнения запроса было найдено " + p + " записи";
+                    else
+                        string = "В результате выполнения запроса была найдена " + p + " запись";
+                }
+            }
+            else
+                string = "Число должно быть неотрицательным.";
+
+            document.getElementById("forthResult").innerHTML = string; 
+            
+        } 
+
+        function fibb(n) { 
+            var a = 0;
+            var b = 1;
+            var fibb = 0;
+
+            if (n <= 1000 & n >= 0) {
+                if (n == 0)
+                    fibb = 0;
+                else if (n == 1)
+                    fibb = 1;
+                else {
+                    for (var i = 1; i < n; i++) {
+                        fibb = a + b;
+                        a = b;
+                        b = fibb;
+                    }
+                }
+
+                document.getElementById("fifthResult").innerHTML = fibb; 
+            }
+            else
+            document.getElementById("fifthResult").innerHTML = "Число должно быть неотрицательным."; 
+            
+        } 
+    </script>
+    <footer>
+        <div class="container">
+            <p>
+                Почта: e.v.verstova@mail.ru<br>
+                Контактный телефон: +7(929)659-32-57<br>
+                © Верстова Елена, 2023<br>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
