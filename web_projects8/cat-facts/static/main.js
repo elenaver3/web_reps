@@ -107,9 +107,15 @@ function renderRecords(records) {
 function downloadData(page=1) {
     let factsList = document.querySelector('.facts-list');
     let url = new URL(factsList.dataset.url);
+
     let perPage = document.querySelector('.per-page-btn').value;
+
+    let query = document.querySelector('.search-field').value;
+
+    url.searchParams.append('q', query);
     url.searchParams.append('page', page);
     url.searchParams.append('per-page', perPage);
+    
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.responseType = 'json';
@@ -118,11 +124,19 @@ function downloadData(page=1) {
         setPaginationInfo(this.response['_pagination']);
         renderPaginationElement(this.response['_pagination']);
     }
+
     xhr.send();
+}
+
+
+function queryHandler(event) {
+    downloadData(1);
 }
 
 window.onload = function () {
     downloadData();
     document.querySelector('.pagination').onclick = pageBtnHandler;
     document.querySelector('.per-page-btn').onchange = perPageBtnHandler;
+
+    document.querySelector('.search-field').onchange = queryHandler;
 }
