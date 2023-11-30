@@ -29,7 +29,8 @@
         </section>
         <?php 
             function test_it( $text )
-            {
+            {  
+
                 // количество символов в тексте определяется функцией размера текста
                 echo 'Количество символов: '.strlen($text).'<br>';
 
@@ -44,6 +45,7 @@
                 $upper_amount = 0;
                 $lower_amount = 0;
                 $punct_amount = 0;
+                $count_words = 0;
                 $dictionary = array();
 
                 $word=''; // текущее слово
@@ -56,35 +58,24 @@
                         $cifra_amount++; // увеличиваем счетчик цифр
 
                     // если в тексте встретился пробел или текст закончился
-                    if( $text[$i]==' ' || $i==strlen($text) - 1)
+                    if( $text[$i]==' ' || $i==strlen($text) - 1 || ctype_punct($text[$i]))
                     {
-                        if ($text[$i]==' ') {
-                            if( $word ) // если есть текущее слово
-                            {
-                                // если текущее слово сохранено в списке слов
-                                if( isset($words[$word]) )
-                                    $words[ $word ]++; // увеличиваем число его повторов
-                                else
-                                    $words[ $word ] = 1; // первый повтор слова
-
-                                
-                            }
-                            $word=''; // сбрасываем текущее слово
-                        }
-                        else {
+                        if (!ctype_punct($text[$i]) && !$text[$i]==' ' && $i==strlen($text) - 1) {
                             $word.=$text[$i];
-                            if( $word ) // если есть текущее слово
-                            {
-                                // если текущее слово сохранено в списке слов
-                                if( isset($words[$word]) )
-                                    $words[ $word ]++; // увеличиваем число его повторов
-                                else
-                                    $words[ $word ] = 1; // первый повтор слова
-
-                                
-                            }
-                            $word=''; // сбрасываем текущее слово
                         }
+                        if( $word != '') // если есть текущее слово
+                        {
+                            // если текущее слово сохранено в списке слов
+                            if( isset($words[$word]) ) {
+                                $words[$word]++; // увеличиваем число его повторов
+                            }
+                            else {
+                                $words[$word] = 1; // первый повтор слова
+                            }
+                                
+                                
+                        }
+                        $word=''; // сбрасываем текущее слово
                         
                     }
                     else // если слово продолжается
@@ -102,15 +93,11 @@
                         
                     if (ctype_punct($text[$i]))
                         $punct_amount++;  
-                      
-                    // $symbol = iconv("cp1251", "utf-8", $text[$i]); 
+            
+                }
 
-                    // if (ord($symbol) != 32) {
-                    //     if (isset($dictionary[$symbol]))
-                    //         $dictionary[$symbol]++;
-                    //     else
-                    //         $dictionary[$symbol] = 1;
-                    // }
+                foreach ($words as $key => $value) {
+                    $count_words += $value;
                 }
 
                 echo 'Количество букв: '.$letter_amount.'<br>';
@@ -121,16 +108,17 @@
                 echo 'Количество знаков препинания: '.$punct_amount.'<br>';
 
                 echo 'Количество цифр: '.$cifra_amount.'<br>';
-                echo 'Количество слов: '.count($words).'<br>';
+                echo 'Количество слов: '.$count_words.'<br>';
 
                 echo '<br>Вхождение символов: <br><table class="normal_table"><tr>';
                 $temp = 0;
+
                 $dictionary = test_symbs($text);
                 foreach ($dictionary as $key => $value) {
                     $key = iconv("cp1251", "utf-8", $key); 
                     echo '<td>"'.$key.'": '.$value.'</td>';
                     $temp++;
-                    if ($temp == 16) {
+                    if ($temp == 15) {
                         $temp = 0;
                         echo '</tr><tr>';
                     }
@@ -138,15 +126,15 @@
                 echo '</tr></table><br>';
                 
 
-                echo '<br>Вхождение слов по алфавиту:<br>';
+                echo 'Вхождение слов по алфавиту:<br>';
 
                 $new_words = array();
                 foreach ($words as $key => $value) {
-                    $lowered = strtolower($key);
-                    if (isset($new_words[$lowered]))
-                        $new_words[$lowered]++;
+                    $key = mb_strtolower($key, 'cp1251');
+                    if (isset($new_words[$key]))
+                        $new_words[$key] += $value;
                     else
-                        $new_words[$lowered] = 1;
+                        $new_words[$key] = $value;
                 }
 
                 ksort($new_words);
@@ -156,27 +144,21 @@
                     echo $key.': '.$value.'<br>';
                 }
 
-                // 1. количество символов в тексте (включая пробелы);  СДЕЛАНО
-                // 2. количество букв; СДЕЛАНО
-                // 3. количество строчных и заглавных букв по отдельности; СДЕЛАНО
-                // 4. количество знаков препинания; СДЕЛАНО
-                // 5. количество цифр; СДЕЛАНО
-                // 6. количество слов; СДЕЛАНО
-                // 7. количество вхождений каждого символа текста (без различия верхнего и нижнего регистров); СДЕЛАНО
-                // 8. список всех слов в тексте и количество их вхождений, отсортированный по алфавиту
+        
             } 
             
             function test_symbs( $text )
             {
                 $symbs=array(); // массив символов текста
-                $l_text=strtolower( $text ); // переводим текст в нижний регистр
+                $l_text=strtolower( $text); // переводим текст в нижний регистр
+
                 // последовательно перебираем все символы текста
                 for($i=0; $i<strlen($l_text); $i++)
                 {
-                    if( isset($symbs[$l_text[$i]]) ) // если символ есть в массиве
-                        $symbs[$l_text[$i]]++; // увеличиваем счетчик повторов
+                    if( isset($symbs[mb_strtolower($l_text[$i], 'cp1251')])) // если символ есть в массиве
+                        $symbs[mb_strtolower($l_text[$i], 'cp1251')]++; // увеличиваем счетчик повторов
                     else // иначе
-                        $symbs[$l_text[$i]]=1; // добавляем символ в массив
+                        $symbs[mb_strtolower($l_text[$i], 'cp1251')]=1; // добавляем символ в массив
                 }
                 return $symbs; // возвращаем массив с числом вхождений символов в тексте
             }

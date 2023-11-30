@@ -20,7 +20,7 @@
                 <div class="inputs">
                     <textarea cols="40" rows="10" name="data"></textarea>
                 </div>
-                <p><input type="submit" name="submit" class="button"></p>
+                <p><input type="submit" name="submit" class="button" value="Анализировать"></p>
             </form>
 
         </section>

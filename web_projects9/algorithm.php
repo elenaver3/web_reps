@@ -38,7 +38,7 @@
                     <p><input type="radio" name="type" value="D" <?php if (isset($_GET['type']) and $_GET['type']=='D') {echo 'checked';} ?>>D</p>
                     <p><input type="radio" name="type" value="E" <?php if (isset($_GET['type']) and $_GET['type']=='E') {echo 'checked';} ?>>E</p>
                 </div>
-                <p><input type="submit" name="submit" class="button" href="algorithm.php?x=<?php $GET['fio'] ?>&type=<?php $GET['type'] ?>&encounting=<?php $GET['encounting'] ?>&step=<?php $GET['step'] ?>"></p>
+                <p><input type="submit" name="submit" class="button" href="algorithm.php"></p>
             </form>
             <?php
                 if (isset($_GET['x']) && $_GET['x'] != "") {
@@ -114,8 +114,8 @@
 
 
 
-                    if (($f > $max_func && $max_func != "") || ($min_func != "" && $f < $min_func))	// если вышли за рамки диапазона
-                        break;     
+                    if (($f >= $max_func && $max_func != "") || ($min_func != "" && $f < $min_func))	// если вышли за рамки диапазона
+                        continue;     
 
                     if ($f != 'error') {
                         $f = round($f, 3);
