@@ -81,7 +81,7 @@
                         echo '</div>';
                     }
                     else {
-                        echo '<div style="margin: 0 auto; width:180px; display: flex; flex-direction: row;">';
+                        echo '<div style="width:180px; display: flex; flex-direction: row;">';
                         outDivForm(); // выводим таблицу умножения в блочной форме
                         echo '</div>';
                     }

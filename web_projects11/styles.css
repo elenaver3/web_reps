@@ -134,7 +134,8 @@ table, th, td {
 }
 
 .line {
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
 }
 
 td {
