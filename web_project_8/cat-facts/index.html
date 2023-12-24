@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="static/styles.css">
     <script src="static/main.js" defer></script>
 </head>
+
 <body>
     <header class="header">
         <nav>
@@ -16,11 +18,16 @@
     </header>
     <main>
         <div class="container">
+            <div class="autocomplete" data-url="http://cat-facts-api.std-900.ist.mospolytech.ru/autocomplete"></div>
             <div class="search-form">
-                <input type="text" class="search-field"  id="search">
-                <ul class="matches" data-url="http://cat-facts-api.std-900.ist.mospolytech.ru/autocomplete"></ul>
-                <button class="search-btn">Найти</button>
+                <div class="searching">
+                    <input type="text" class="search-field" autocomplete="off">
+                    <ul class="result">
+                    </ul>
+                </div>
+                    <button class="search-btn">Найти</button> 
             </div>
+            
             <div class="pagination-info">
                 <span>
                     Показывать по
@@ -36,13 +43,15 @@
                     записей на странице
                 </span>
                 <span class="current-interval-info">
-                    Показаны записи с <span class="current-interval-start">1</span> по <span class="current-interval-end">10</span> из <span class="total-count">190</span>
+                    Показаны записи с <span class="current-interval-start">1</span> по <span
+                        class="current-interval-end">10</span> из <span class="total-count">190</span>
                 </span>
             </div>
-            <div class="facts-list" data-url="http://cat-facts-api.std-900.ist.mospolytech.ru/facts" id="facts">
+            <div class="facts-list" data-url="http://cat-facts-api.std-900.ist.mospolytech.ru/facts">
                 <div class="facts-list-item">
                     <div class="item-content">
-                        Scottish sailer Alexander Selkirk once survived for 4 years on a deserted island thanks to feral cats that protected him
+                        Scottish sailer Alexander Selkirk once survived for 4 years on a deserted island thanks to feral
+                        cats that protected him
                         from large rats during the night.
                     </div>
                     <div class="item-footer">
@@ -55,16 +64,17 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="pagination">
-                 <button class="btn first-page-btn" data-page="1">Первая страница</button>
+            <div class="pagination">
+                <!-- <button class="btn first-page-btn" data-page="1">Первая страница</button>
                 <div class="pages-btn">
                     <button class="btn active" data-page="1">1</button>
                     <button class="btn" data-page="2">2</button>
                     <button class="btn" data-page="3">3</button>
                 </div>
-                <button class="btn last-page-btn">Последняя страница</button> 
-            </div> -->
+                <button class="btn last-page-btn">Последняя страница</button> -->
+            </div>
         </div>
     </main>
 </body>
+
 </html>

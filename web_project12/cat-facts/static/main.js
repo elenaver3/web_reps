@@ -132,9 +132,10 @@ function downloadData(page=1) {
 
 
 function searchHandler(){
-    const listLink = document.querySelector('.matches'); 
+    let listLink = document.querySelector('.matches'); 
     let q = document.querySelector('.search-field').value;
     listLink.innerHTML = ''; 
+
     fetch(listLink.dataset.url+'?q=' + q)
     .then(response => {
         if (!response.ok) {
@@ -144,7 +145,7 @@ function searchHandler(){
     })
     .then(data => {
         data.forEach(query => {
-            const listItem = document.createElement('li');
+            let listItem = document.createElement('li');
             listItem.textContent = query;
             listItem.addEventListener('click', e => {
                 document.getElementById('search').value = listItem.textContent; 

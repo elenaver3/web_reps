@@ -9,7 +9,6 @@ function createPageBtn(page, classes=[]) {
     return btn;
 }
 
-
 function renderPaginationElement(info) {
     let btn;
     let paginationContainer = document.querySelector('.pagination');
@@ -43,7 +42,6 @@ function renderPaginationElement(info) {
 function perPageBtnHandler(event) {
     downloadData(1);
 }
-
 
 function setPaginationInfo(info) {
     document.querySelector('.total-count').innerHTML = info.total_count;
@@ -106,19 +104,42 @@ function renderRecords(records) {
     }
 }
 
-function searchBtnHandler(event) {
-    let a = document.querySelector('.facts-list').dataset.url; 
-    document.querySelector('.facts-list').dataset.url = document.querySelector('.facts-list').dataset.url+'?q='+document.querySelector('.search-field').value;
 
-    downloadData(1); 
-    document.querySelector('.facts-list').dataset.url=a;
-    
+function renderAutocomplete(autocomplete){
+    let autocompleteList = document.querySelector('.result');
+    for (let i = 0; i < autocomplete.length; i++) {
+        let autocompleteElement = document.createElement('li');
+        autocompleteElement.classList.add('autocomplete');
+        autocompleteElement.innerHTML = autocomplete[i];
+        autocompleteList.append(autocompleteElement);
+    }
+}
+
+
+function downloadAutocomplete(){
+    let autocompleteList = document.querySelector('.result');
+    autocompleteList.innerHTML = "";
+
+    let autocomplete = document.querySelector('.autocomplete');
+    let url = new URL(autocomplete.dataset.url);
+    let searchText = document.querySelector('.search-field').value;
+    url.searchParams.append('q', searchText);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.responseType = 'json';
+    xhr.onload = function () {
+        renderAutocomplete(this.response);
+    }
+    xhr.send();
 }
 
 function downloadData(page=1) {
     let factsList = document.querySelector('.facts-list');
     let url = new URL(factsList.dataset.url);
     let perPage = document.querySelector('.per-page-btn').value;
+    let search = document.querySelector('.search-field').value;
+    url.searchParams.append('q', search);
     url.searchParams.append('page', page);
     url.searchParams.append('per-page', perPage);
     let xhr = new XMLHttpRequest();
@@ -126,47 +147,27 @@ function downloadData(page=1) {
     xhr.responseType = 'json';
     xhr.onload = function () {
         renderRecords(this.response.records);
+        setPaginationInfo(this.response['_pagination']);
+        renderPaginationElement(this.response['_pagination']);
     }
     xhr.send();
 }
 
+function searchBtnHandler(event){
+    downloadData(1);
+}
 
-function searchHandler(){
-    const listLink = document.querySelector('.matches'); 
-    let q = document.querySelector('.search-field').value;
-    listLink.innerHTML = ''; 
-    fetch(listLink.dataset.url+'?q=' + q)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('HTTP error ' + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        data.forEach(query => {
-            const listItem = document.createElement('li');
-            listItem.textContent = query;
-            listItem.addEventListener('click', e => {
-                document.getElementById('search').value = listItem.textContent; 
-                listLink.innerHTML = '';
-            });
-            listLink.appendChild(listItem);
-        });
-    });
-
+function autocompleteHandler(event){
+    document.querySelector('.search-field').value = event.srcElement.innerHTML;
+    let autocompleteList = document.querySelector('.result')
+    autocompleteList.innerHTML = "";
 }
 
 window.onload = function () {
-    downloadData();
+    downloadData(1);
     document.querySelector('.pagination').onclick = pageBtnHandler;
-    document.querySelector('.search-btn').onclick = searchBtnHandler;
     document.querySelector('.per-page-btn').onchange = perPageBtnHandler;
-
-    document.getElementById('search').addEventListener('input', searchHandler);
-    document.addEventListener('click', function (event) {
-        if (event.target !== document.getElementById('search-box')) {
-            document.querySelector('.matches').innerHTML = '';
-        }
-    });
-
+    document.querySelector('.search-btn').onclick = searchBtnHandler;
+    document.querySelector('.search-field').oninput = downloadAutocomplete;
+    document.querySelector('.result').onclick = autocompleteHandler;
 }
