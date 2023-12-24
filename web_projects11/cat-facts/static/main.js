@@ -59,6 +59,14 @@ function pageBtnHandler(event) {
         window.scrollTo(0, 0);
     }
 }
+function searchBtnHandler(event) {
+    let a = document.querySelector('.facts-list').dataset.url; 
+    document.querySelector('.facts-list').dataset.url = document.querySelector('.facts-list').dataset.url+'?q='+document.querySelector('.search-field').value;
+
+    downloadData(1); 
+    document.querySelector('.facts-list').dataset.url=a;
+    
+}
 
 function createAuthorElement(record) {
     let user = record.user || {'name': {'first': '', 'last': ''}};
@@ -106,15 +114,6 @@ function renderRecords(records) {
     }
 }
 
-function searchBtnHandler(event) {
-    let a = document.querySelector('.facts-list').dataset.url; 
-    document.querySelector('.facts-list').dataset.url = document.querySelector('.facts-list').dataset.url+'?q='+document.querySelector('.search-field').value;
-
-    downloadData(1); 
-    document.querySelector('.facts-list').dataset.url=a;
-    
-}
-
 function downloadData(page=1) {
     let factsList = document.querySelector('.facts-list');
     let url = new URL(factsList.dataset.url);
@@ -126,6 +125,8 @@ function downloadData(page=1) {
     xhr.responseType = 'json';
     xhr.onload = function () {
         renderRecords(this.response.records);
+        setPaginationInfo(this.response['_pagination']);
+        renderPaginationElement(this.response['_pagination']);
     }
     xhr.send();
 }
